@@ -29,12 +29,39 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-      setLoading(false);
-    });
+    let unsubscribe: (() => void) | undefined;
 
-    return unsubscribe;
+    const setupAuth = async () => {
+      try {
+        // Wait for auth to be ready
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        if (auth) {
+          unsubscribe = onAuthStateChanged(auth, (user) => {
+            console.log(
+              "Auth state changed:",
+              user ? "User logged in" : "User logged out",
+            );
+            setUser(user);
+            setLoading(false);
+          });
+        } else {
+          console.error("Auth not initialized");
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error("Auth setup error:", error);
+        setLoading(false);
+      }
+    };
+
+    setupAuth();
+
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
   }, []);
 
   const value = {

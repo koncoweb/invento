@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
-import { Camera } from "expo-camera";
-import { BarCodeScanner } from "expo-barcode-scanner";
-import { Image } from "expo-image";
+import { View, Text, TouchableOpacity, Alert } from "react-native";
+import { CameraView, Camera } from "expo-camera";
 import {
   Scan,
   FlashlightOff,
@@ -37,27 +35,22 @@ const QRScanner = ({
   };
 
   useEffect(() => {
-    (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(status === "granted");
-    })();
+    const getCameraPermissions = async () => {
+      try {
+        const { status } = await Camera.requestCameraPermissionsAsync();
+        setHasPermission(status === "granted");
+      } catch (error) {
+        console.error("Camera permission error:", error);
+        setHasPermission(false);
+      }
+    };
+
+    getCameraPermissions();
   }, []);
 
   const handleBarCodeScanned = ({ data }: { type: string; data: string }) => {
     setScanned(true);
-
-    // Simulate checking if asset exists in database
-    // In a real app, this would query your Firebase database
-    if (data === "AST001") {
-      setAssetFound(true);
-      onScan(data);
-    } else {
-      setAssetFound(false);
-      Alert.alert(
-        "Asset Not Found",
-        "Would you like to add this as a new asset?",
-      );
-    }
+    onScan(data);
   };
 
   const toggleFlash = () => {
@@ -83,7 +76,15 @@ const QRScanner = ({
         <Text className="text-lg text-red-500">No access to camera</Text>
         <TouchableOpacity
           className="mt-4 bg-blue-500 px-4 py-2 rounded-lg"
-          onPress={() => Camera.requestCameraPermissionsAsync()}
+          onPress={async () => {
+            try {
+              const { status } = await Camera.requestCameraPermissionsAsync();
+              setHasPermission(status === "granted");
+            } catch (error) {
+              console.error("Camera permission request error:", error);
+              setHasPermission(false);
+            }
+          }}
         >
           <Text className="text-white font-medium">Grant Permission</Text>
         </TouchableOpacity>
@@ -95,18 +96,14 @@ const QRScanner = ({
     <View className="flex-1 bg-gray-100">
       {!scanned ? (
         <View className="flex-1">
-          <Camera
-            className="flex-1"
-            type={Camera.Constants.Type.back}
-            flashMode={
-              flashOn
-                ? Camera.Constants.FlashMode.torch
-                : Camera.Constants.FlashMode.off
-            }
-            barCodeScannerSettings={{
-              barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
+          <CameraView
+            style={{ flex: 1 }}
+            facing="back"
+            enableTorch={flashOn}
+            barcodeScannerSettings={{
+              barcodeTypes: ["qr"],
             }}
-            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+            onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
           >
             <View className="flex-1 bg-transparent">
               {/* Overlay guide for scanning */}
@@ -150,7 +147,7 @@ const QRScanner = ({
                 </TouchableOpacity>
               </View>
             </View>
-          </Camera>
+          </CameraView>
         </View>
       ) : (
         <View className="flex-1 p-4">

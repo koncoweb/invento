@@ -22,6 +22,8 @@ import InventoryForm from "../components/InventoryForm";
 
 interface InventoryItem {
   id: string;
+  inventoryId: string;
+  qrcode: string;
   itemName: string;
   brand: string;
   category: string;
@@ -98,8 +100,17 @@ export default function InventoryScreen() {
     setShowForm(true);
   };
 
+  const generateInventoryId = () => {
+    const timestamp = Date.now().toString();
+    const random = Math.random().toString(36).substring(2, 8);
+    return `INV-${timestamp}-${random}`.toUpperCase();
+  };
+
   const handleFormSubmit = async (
-    formData: Omit<InventoryItem, "id" | "createdAt" | "updatedAt" | "userId">,
+    formData: Omit<
+      InventoryItem,
+      "id" | "createdAt" | "updatedAt" | "userId" | "inventoryId" | "qrcode"
+    >,
   ) => {
     try {
       if (editingItem) {
@@ -118,8 +129,11 @@ export default function InventoryScreen() {
         Alert.alert("Success", "Item updated successfully");
       } else {
         // Create new item
+        const inventoryId = generateInventoryId();
         const docRef = await addDoc(collection(db, "inventories"), {
           ...formData,
+          inventoryId,
+          qrcode: inventoryId,
           userId: user?.uid,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -127,6 +141,8 @@ export default function InventoryScreen() {
         const newItem: InventoryItem = {
           id: docRef.id,
           ...formData,
+          inventoryId,
+          qrcode: inventoryId,
           userId: user?.uid || "",
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -260,6 +276,10 @@ export default function InventoryScreen() {
               </View>
 
               <View className="space-y-1">
+                <Text className="text-sm text-gray-600">
+                  <Text className="font-medium">Inventory ID:</Text>{" "}
+                  {item.inventoryId}
+                </Text>
                 <Text className="text-sm text-gray-600">
                   <Text className="font-medium">Category:</Text> {item.category}
                 </Text>

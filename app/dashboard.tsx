@@ -42,8 +42,8 @@ export default function Dashboard() {
   ]);
 
   const handleScanQR = () => {
-    // Navigate to QR scanner screen
-    router.push("/scan");
+    // Navigate to stock opname screen
+    router.push("/stockopname");
   };
 
   const handleManageInventory = () => {
@@ -96,7 +96,9 @@ export default function Dashboard() {
               <View className="bg-blue-100 p-3 rounded-full mb-2">
                 <QrCode color="#2563eb" size={24} />
               </View>
-              <Text className="text-center text-sm font-medium">Scan QR</Text>
+              <Text className="text-center text-sm font-medium">
+                Stock Opname
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity

@@ -14,6 +14,8 @@ import { ChevronDown, X, Plus } from "lucide-react-native";
 
 interface InventoryItem {
   id: string;
+  inventoryId: string;
+  qrcode: string;
   itemName: string;
   brand: string;
   category: string;
@@ -28,7 +30,10 @@ interface InventoryItem {
 interface InventoryFormProps {
   initialData?: InventoryItem | null;
   onSubmit: (
-    data: Omit<InventoryItem, "id" | "createdAt" | "updatedAt" | "userId">,
+    data: Omit<
+      InventoryItem,
+      "id" | "createdAt" | "updatedAt" | "userId" | "inventoryId" | "qrcode"
+    >,
   ) => void;
   onCancel: () => void;
 }
@@ -222,6 +227,23 @@ export default function InventoryForm({
       </View>
 
       <ScrollView className="flex-1 px-4 py-6">
+        {/* Inventory ID Display (for edit mode) */}
+        {initialData && (
+          <View className="mb-4">
+            <Text className="text-sm font-medium text-gray-700 mb-2">
+              Inventory ID
+            </Text>
+            <View className="border border-gray-300 rounded-lg px-3 py-3 bg-gray-50">
+              <Text className="text-gray-900 font-mono">
+                {initialData.inventoryId}
+              </Text>
+            </View>
+            <Text className="text-xs text-gray-500 mt-1">
+              QR Code: {initialData.qrcode}
+            </Text>
+          </View>
+        )}
+
         {/* Item Name */}
         <View className="mb-4">
           <Text className="text-sm font-medium text-gray-700 mb-2">
