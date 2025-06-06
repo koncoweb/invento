@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "test-tempo",
-    "slug": "test-tempo",
+    "name": "invento",
+    "slug": "invento",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "owner": "c593d5b6-1994-4778-823b-c4d28323df1c",
+    "owner": "koncomyid",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.invento.koncoweb"
