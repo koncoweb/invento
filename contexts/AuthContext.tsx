@@ -31,30 +31,38 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     let unsubscribe: (() => void) | undefined;
 
-    const setupAuth = async () => {
+    const setupAuth = () => {
       try {
-        // Wait for auth to be ready
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        console.log("Setting up auth listener...");
 
-        if (auth) {
-          unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (!auth) {
+          console.error("Firebase auth is not initialized");
+          setLoading(false);
+          return;
+        }
+
+        unsubscribe = onAuthStateChanged(
+          auth,
+          (user) => {
             console.log(
               "Auth state changed:",
               user ? "User logged in" : "User logged out",
             );
             setUser(user);
             setLoading(false);
-          });
-        } else {
-          console.error("Auth not initialized");
-          setLoading(false);
-        }
+          },
+          (error) => {
+            console.error("Auth state change error:", error);
+            setLoading(false);
+          },
+        );
       } catch (error) {
         console.error("Auth setup error:", error);
         setLoading(false);
       }
     };
 
+    // Set up auth immediately
     setupAuth();
 
     return () => {

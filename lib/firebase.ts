@@ -1,4 +1,4 @@
-import { initializeApp, getApps } from "firebase/app";
+import { initializeApp, getApps, getApp } from "firebase/app";
 import {
   getAuth,
   initializeAuth,
@@ -18,23 +18,29 @@ const firebaseConfig = {
   measurementId: "G-0VK3YJ2Y7C",
 };
 
-// Initialize Firebase app only if it hasn't been initialized
-const app =
-  getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+// Initialize Firebase app
+let app;
+try {
+  app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+} catch (error) {
+  console.log("Firebase app initialization error:", error);
+  app = initializeApp(firebaseConfig);
+}
 
 // Initialize Firebase Authentication
 let auth;
-if (Platform.OS === "web") {
-  auth = getAuth(app);
-} else {
-  try {
+try {
+  if (Platform.OS === "web") {
+    auth = getAuth(app);
+  } else {
+    // For React Native, use initializeAuth with AsyncStorage persistence
     auth = initializeAuth(app, {
       persistence: getReactNativePersistence(AsyncStorage),
     });
-  } catch (error) {
-    // If auth is already initialized, get the existing instance
-    auth = getAuth(app);
   }
+} catch (error) {
+  console.log("Auth initialization error, falling back to getAuth:", error);
+  auth = getAuth(app);
 }
 
 // Initialize Cloud Firestore
