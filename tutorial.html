@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial Build Aplikasi Expo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        h2 {
+            color: #2980b9;
+            margin-top: 25px;
+        }
+        code {
+            background-color: #f7f7f7;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #c0392b;
+        }
+        pre {
+            background-color: #f7f7f7;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border-left: 4px solid #3498db;
+        }
+        pre code {
+            background-color: transparent;
+            padding: 0;
+            color: #333;
+        }
+        blockquote {
+            border-left: 4px solid #3498db;
+            padding: 10px 15px;
+            background-color: #ebf5fb;
+            margin: 20px 0;
+        }
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        ul, ol {
+            padding-left: 25px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .note {
+            background-color: #ffffcc;
+            padding: 15px;
+            border-left: 4px solid #ffcc00;
+            margin: 20px 0;
+        }
+        .warning {
+            background-color: #ffebeb;
+            padding: 15px;
+            border-left: 4px solid #ff0000;
+            margin: 20px 0;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+        }
+        .toc {
+            background-color: #f8f9fa;
+            padding: 15px 25px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        .toc h3 {
+            margin-top: 0;
+        }
+        .toc ul {
+            list-style-type: none;
+            padding-left: 10px;
+        }
+        .toc li {
+            margin-bottom: 8px;
+        }
+        .toc a {
+            color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tutorial Build Aplikasi Expo</h1>
+
+        <div class="toc">
+            <h3>Daftar Isi</h3>
+            <ul>
+                <li><a href="#pengenalan">1. Pengenalan</a></li>
+                <li><a href="#prasyarat">2. Prasyarat</a></li>
+                <li><a href="#proses-login-expo">3. Proses Login Expo</a></li>
+                <li><a href="#inisialisasi-proyek-expo">4. Inisialisasi Proyek Expo</a></li>
+                <li><a href="#konfigurasi-eas-build">5. Konfigurasi EAS Build</a></li>
+                <li><a href="#menjalankan-build-android">6. Menjalankan Build Android</a></li>
+                <li><a href="#mengatasi-error-umum">7. Mengatasi Error Umum</a></li>
+                <li><a href="#studi-kasus-error-pada-expo-barcode-scanner">8. Studi Kasus: Error pada expo-barcode-scanner</a></li>
+                <li><a href="#mengunduh-dan-menginstal-apk">9. Mengunduh dan Menginstal APK</a></li>
+                <li><a href="#tips-dan-trik">10. Tips dan Trik</a></li>
+            </ul>
+        </div>
+
+        <h2 id="pengenalan">Pengenalan</h2>
+        <p>
+            Expo adalah platform pengembangan aplikasi mobile yang memungkinkan pengembang untuk membuat aplikasi React Native dengan mudah. 
+            EAS Build (Expo Application Services) adalah layanan build yang disediakan oleh Expo untuk membuat file APK (Android) atau IPA (iOS) dari proyek Expo Anda.
+        </p>
+        <p>
+            Document ini akan menjelaskan cara melakukan build aplikasi Expo dari awal hingga akhir, termasuk cara mengatasi masalah umum yang mungkin muncul selama proses build.
+        </p>
+
+        <h2 id="prasyarat">Prasyarat</h2>
+        <p>Sebelum memulai, pastikan Anda memiliki:</p>
+        <ol>
+            <li>Node.js versi terbaru terinstal</li>
+            <li>Expo CLI terinstal (<code>npm install -g expo-cli</code>)</li>
+            <li>EAS CLI terinstal (<code>npm install -g eas-cli</code>)</li>
+            <li>Akun Expo di <a href="https://expo.dev" target="_blank">expo.dev</a></li>
+            <li>Untuk build iOS: Komputer Mac dengan Xcode terinstal</li>
+            <li>Untuk Android: JDK terinstal (opsional, karena EAS Build dapat melakukan build di cloud)</li>
+        </ol>
+
+        <h2 id="proses-login-expo">Proses Login Expo</h2>
+        <p>Langkah pertama adalah login ke akun Expo Anda:</p>
+        <pre><code>npx expo login</code></pre>
+        <p>Masukkan email dan password Anda. Jika berhasil, Anda akan melihat pesan konfirmasi bahwa Anda sudah login.</p>
+        <p>Alternatif, Anda bisa menggunakan token akses:</p>
+        <pre><code>npx expo login --token YOUR_TOKEN</code></pre>
+        <p>Contoh token akses: <code>6om94YWQ_U_OB1gWW-OQ83eZL52nsnD5d918Dzj9</code></p>
+        <blockquote>
+            <strong>Catatan</strong>: Simpan token akses Anda dengan aman dan jangan bagikan kepada orang lain.
+        </blockquote>
+
+        <h2 id="inisialisasi-proyek-expo">Inisialisasi Proyek Expo</h2>
+        <p>Jika Anda sudah memiliki proyek Expo, Anda perlu menginisialisasi EAS di proyek tersebut:</p>
+        <pre><code>npx eas init</code></pre>
+        <p>Perintah ini akan:</p>
+        <ol>
+            <li>Memverifikasi bahwa Anda sudah login</li>
+            <li>Membuat ID proyek baru di server Expo</li>
+            <li>Memperbarui file app.json atau app.config.js dengan ID proyek</li>
+            <li>Membuat file eas.json dengan konfigurasi build dasar</li>
+        </ol>
+        <p>Pastikan "owner" di file app.json adalah username Expo Anda, bukan UUID. Contoh:</p>
+        <pre><code>{
+  "expo": {
+    "owner": "koncomyid",
+    "name": "invento",
+    "slug": "invento",
+    ...
+  }
+}</code></pre>
+
+        <h2 id="konfigurasi-eas-build">Konfigurasi EAS Build</h2>
+        <p>
+            File <code>eas.json</code> mengatur konfigurasi build Anda. Berikut adalah contoh konfigurasi dasar:
+        </p>
+        <pre><code>{
+  "cli": {
+    "version": ">= 16.3.0"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleDebug"
+      }
+    },
+    "preview": {
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleRelease"
+      },
+      "distribution": "internal"
+    },
+    "production": {
+      "android": {
+        "buildType": "app-bundle"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}</code></pre>
+
+        <p>Penjelasan profil:</p>
+        <ul>
+            <li><strong>development</strong>: Untuk pengembangan dengan Dev Client, debug mode</li>
+            <li><strong>preview</strong>: Build dengan optimisasi, tapi versi APK (lebih mudah dibagikan)</li>
+            <li><strong>production</strong>: Build release untuk Play Store (app bundle)</li>
+        </ul>
+
+        <h2 id="menjalankan-build-android">Menjalankan Build Android</h2>
+        <p>Untuk memulai build, jalankan perintah:</p>
+        <pre><code># Untuk development build:
+npx eas build --profile development --platform android
+
+# Untuk preview build:
+npx eas build --profile preview --platform android
+
+# Untuk production build:
+npx eas build --profile production --platform android</code></pre>
+
+        <p>Saat pertama kali build, EAS akan bertanya tentang keystore (kunci tanda tangan Android):</p>
+        <ol>
+            <li><strong>Buat keystore baru</strong>: EAS akan membuat keystore dan menyimpannya di akun Expo Anda</li>
+            <li><strong>Upload keystore yang sudah ada</strong>: Jika Anda sudah memiliki keystore</li>
+        </ol>
+        <p>Pilih opsi pertama jika Anda baru memulai.</p>
+
+        <h2 id="mengatasi-error-umum">Mengatasi Error Umum</h2>
+
+        <h3>1. Masalah Versi Paket</h3>
+        <p>Jika ada pemberitahuan tentang ketidaksesuaian versi paket:</p>
+        <pre><code>The following packages should be updated for best compatibility:
+  expo@53.0.7 - expected version: 53.0.10
+  ...</code></pre>
+        <p>Solusi: Update paket dengan perintah:</p>
+        <pre><code>npx expo install expo@53.0.10 [paket-lain]</code></pre>
+
+        <h3>2. Masalah Keystore</h3>
+        <p>Jika terjadi error saat pembuatan keystore:</p>
+        <pre><code>Error generating Android Keystore</code></pre>
+        <p>Solusi:</p>
+        <ul>
+            <li>Pastikan JDK terinstal jika ingin membuat keystore lokal</li>
+            <li>Gunakan opsi keystore remote melalui EAS</li>
+            <li>Tambahkan <code>"EXPO_USE_HARDCODED_KEYS": "1"</code> pada environment build</li>
+        </ul>
+
+        <h3>3. Error Gradle</h3>
+        <p>Jika muncul error Gradle:</p>
+        <pre><code>Execution failed for task ':app:someGradleTask'</code></pre>
+        <p>Solusi:</p>
+        <ul>
+            <li>Sesuaikan <code>gradleCommand</code> di file eas.json</li>
+            <li>Mulai dengan build development yang lebih sederhana</li>
+        </ul>
+
+        <h2 id="studi-kasus-error-pada-expo-barcode-scanner">Studi Kasus: Error pada expo-barcode-scanner</h2>
+        <h3>Masalah:</h3>
+        <pre><code>Execution failed for task ':expo-barcode-scanner:compileReleaseKotlin'.</code></pre>
+        <p>Error ini terjadi karena masalah kompatibilitas dengan paket <code>expo-barcode-scanner</code>.</p>
+
+        <h3>Solusi:</h3>
+        <ol>
+            <li>
+                <strong>Hapus paket yang bermasalah</strong>:
+                <pre><code>npm uninstall expo-barcode-scanner</code></pre>
+            </li>
+            <li>
+                <strong>Hapus dari app.json</strong>:
+                <pre><code>"plugins": [
+  "expo-router",
+  [
+    "expo-splash-screen",
+    {
+      "image": "./assets/images/splash-icon.png",
+      "imageWidth": 200,
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    }
+  ]
+  // Hapus "expo-barcode-scanner" dari sini
+],</code></pre>
+            </li>
+            <li>
+                <strong>Modifikasi komponen yang menggunakan barcode scanner</strong>:
+                <ul>
+                    <li>Mengubah dari <code>CameraView</code> ke <code>Camera</code> biasa</li>
+                    <li>Mengganti fungsi pemindaian dengan alternatif atau simulasi</li>
+                </ul>
+            </li>
+            <li>
+                <strong>Coba build lagi dengan profil development</strong>:
+                <pre><code>npx eas build --profile development --platform android</code></pre>
+            </li>
+        </ol>
+
+        <h2 id="mengunduh-dan-menginstal-apk">Mengunduh dan Menginstal APK</h2>
+        <p>Setelah build selesai, Anda dapat mengunduh APK:</p>
+        <pre><code># Lihat daftar build yang tersedia
+npx eas build:list
+
+# Unduh build tertentu (ID opsional jika hanya ada satu build terbaru)
+npx eas build:download</code></pre>
+        <p>Anda juga bisa mengunduh langsung dari dashboard Expo di <a href="https://expo.dev" target="_blank">expo.dev</a>.</p>
+
+        <h2 id="tips-dan-trik">Tips dan Trik</h2>
+        <ol>
+            <li><strong>Mulai dengan profil development</strong>: Lebih mudah berhasil dan lebih cepat untuk debugging</li>
+            <li>
+                <strong>Bersihkan cache jika mengalami masalah</strong>:
+                <pre><code>npm cache clean --force</code></pre>
+            </li>
+            <li><strong>Periksa kompatibilitas paket</strong>: Pastikan semua paket kompatibel dengan versi Expo yang digunakan</li>
+            <li><strong>Gunakan "internal distribution"</strong>: Memudahkan berbagi APK tanpa melalui Play Store</li>
+            <li><strong>Ambil log lengkap</strong>: Jika terjadi masalah, lihat log build lengkap di dashboard Expo</li>
+            <li><strong>Perbarui Expo SDK secara berkala</strong>: Untuk mendapatkan fitur terbaru dan perbaikan bug</li>
+            <li><strong>Gunakan EAS Update</strong>: Untuk memperbarui aplikasi tanpa harus build ulang (OTA updates)</li>
+        </ol>
+
+        <hr>
+        <p>Document ini akan terus diperbarui sesuai dengan perkembangan Expo dan EAS Build. Semoga bermanfaat dalam perjalanan pengembangan aplikasi mobile Anda!</p>
+    </div>
+</body>
+</html>

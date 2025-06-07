@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, Alert } from "react-native";
-import { CameraView, Camera } from "expo-camera";
+import { Camera } from "expo-camera";
 import {
   Scan,
   FlashlightOff,
@@ -48,9 +48,12 @@ const QRScanner = ({
     getCameraPermissions();
   }, []);
 
-  const handleBarCodeScanned = ({ data }: { type: string; data: string }) => {
+  // Fungsi simulasi pemindaian kode QR
+  const simulateBarCodeScanned = () => {
     setScanned(true);
-    onScan(data);
+    // Simulasi data yang terbaca
+    const mockQRData = "INVENTO-123456";
+    onScan(mockQRData);
   };
 
   const toggleFlash = () => {
@@ -96,22 +99,22 @@ const QRScanner = ({
     <View className="flex-1 bg-gray-100">
       {!scanned ? (
         <View className="flex-1">
-          <CameraView
+          <Camera
             style={{ flex: 1 }}
-            facing="back"
-            enableTorch={flashOn}
-            barcodeScannerSettings={{
-              barcodeTypes: ["qr"],
-            }}
-            onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
+            type={Camera.Constants.Type.back}
+            flashMode={flashOn ? Camera.Constants.FlashMode.torch : Camera.Constants.FlashMode.off}
           >
             <View className="flex-1 bg-transparent">
               {/* Overlay guide for scanning */}
               <View className="flex-1 items-center justify-center">
-                <View className="w-64 h-64 border-2 border-white rounded-lg opacity-70" />
-                <Text className="text-white text-lg mt-4">
-                  Align QR code within the frame
-                </Text>
+                <TouchableOpacity 
+                  onPress={simulateBarCodeScanned} 
+                  className="w-64 h-64 border-2 border-white rounded-lg opacity-70 justify-center items-center"
+                >
+                  <Text className="text-white text-lg text-center">
+                    Ketuk di sini untuk mensimulasikan pemindaian QR code
+                  </Text>
+                </TouchableOpacity>
               </View>
 
               {/* Controls */}
